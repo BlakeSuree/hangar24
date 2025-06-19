@@ -33,7 +33,7 @@
             max-width: 100vw;
             overflow-x: auto;
             text-shadow: 2px 2px 4px #222, 1px 1px 2px #111;
-            cursor: pointer;
+            cursor: default;
             user-select: none;
             position: relative;
             display: inline-block;
@@ -69,15 +69,6 @@
             box-shadow: 0 4px 24px 0 rgba(255,255,255,0.08);
             opacity: 1;
         }
-        .footer {
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            opacity: 0.7;
-            margin-bottom: 2rem;
-            margin-top: 1.5rem;
-        }
         @media (max-width: 600px) {
             .ascii {
                 font-size: 7px;
@@ -89,43 +80,9 @@
                 margin-top: 1rem;
                 margin-bottom: 1rem;
             }
-            .footer {
-                font-size: 0.8rem;
-                margin-bottom: 1rem;
-                margin-top: 1rem;
-            }
             .ascii-container {
                 margin-top: 0.2rem;
             }
-        }
-        .ascii .glow {
-            text-shadow: 0 0 2px rgba(255,255,255,0.3), 0 0 4px rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.9);
-            z-index: 2;
-            position: relative;
-            display: inline-block;
-            transform-origin: center;
-            transform: scale(1.05);
-            transition: transform 0.08s linear, text-shadow 0.12s linear, color 0.12s linear;
-        }
-        .footer-links {
-            margin-top: 0.5rem;
-        }
-        .footer-link {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.03em;
-            opacity: 0.8;
-            margin: 0 0.18rem;
-            transition: opacity 0.15s, border-bottom 0.15s;
-            border-bottom: 1px solid transparent;
-            padding-bottom: 1px;
-        }
-        .footer-link:hover, .footer-link:focus {
-            opacity: 1;
-            border-bottom: 1px solid #fff;
         }
     </style>
 </head>
@@ -134,9 +91,6 @@
         <div class="ascii" id="ascii-art">
             <!-- ASCII art will be rendered here by JS -->
         </div>
-    </div>
-    <div class="footer">
-        Hangar 24
     </div>
     <script>
         // The ASCII art as a string
@@ -169,71 +123,7 @@
         `;
 
         const asciiDiv = document.getElementById('ascii-art');
-        const lines = asciiArt.split('\n');
-        // Store span references in a 2D array for easy neighbor lookup
-        const spanGrid = [];
-        asciiDiv.innerHTML = lines.map((line, rowIdx) => {
-            const row = [];
-            const html = line.split('').map((char, colIdx) => {
-                const span = document.createElement('span');
-                span.innerHTML = char === ' ' ? '&nbsp;' : char;
-                row.push(span);
-                return span.outerHTML;
-            }).join('');
-            spanGrid.push(row);
-            return html;
-        }).join('<br>');
-
-        // Custom grouping: 2 horizontal, 1 vertical, 1 diagonal
-        asciiDiv.addEventListener('mousemove', function(e) {
-            asciiDiv.querySelectorAll('.glow').forEach(el => el.classList.remove('glow'));
-            let closestSpan = null;
-            let minDist = Infinity;
-            let closestRow = 0, closestCol = 0;
-            spanGrid.forEach((row, rowIdx) => {
-                row.forEach((span, colIdx) => {
-                    const rect = span.getBoundingClientRect();
-                    const cx = rect.left + rect.width / 2;
-                    const cy = rect.top + rect.height / 2;
-                    const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
-                    if (dist < minDist) {
-                        minDist = dist;
-                        closestSpan = span;
-                        closestRow = rowIdx;
-                        closestCol = colIdx;
-                    }
-                });
-            });
-            // Glow: 2 horizontal, 1 vertical, 1 diagonal
-            const offsets = [
-                [0, 0], // center
-                [0, -2], [0, -1], [0, 1], [0, 2], // horizontal
-                [-1, 0], [1, 0], // vertical
-                [-1, -1], [-1, 1], [1, -1], [1, 1] // diagonals
-            ];
-            offsets.forEach(([dr, dc]) => {
-                const r = closestRow + dr;
-                const c = closestCol + dc;
-                if (spanGrid[r] && spanGrid[r][c]) {
-                    spanGrid[r][c].classList.add('glow');
-                }
-            });
-        });
-        asciiDiv.addEventListener('mouseleave', function() {
-            asciiDiv.querySelectorAll('.glow').forEach(el => el.classList.remove('glow'));
-        });
-        
-        // Make the plane clickable to navigate to investments
-        asciiDiv.addEventListener('click', function() {
-            window.location.href = 'investments.html';
-        });
-        
-        // Actually render the spans in the DOM
-        asciiDiv.innerHTML = '';
-        spanGrid.forEach((row, rowIdx) => {
-            row.forEach(span => asciiDiv.appendChild(span));
-            if (rowIdx < spanGrid.length - 1) asciiDiv.appendChild(document.createElement('br'));
-        });
+        asciiDiv.innerHTML = asciiArt;
     </script>
 </body>
 </html> 
