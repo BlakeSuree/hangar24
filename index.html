@@ -95,37 +95,97 @@
     <script>
         // The ASCII art as a string
         const asciiArt = `      
-                                      24      
-                                      24
-                                24242424242424
-                                    242424
-                                    242424
-                          2         242424         4
-                         24         242424         24
-         242424242424E242424242424242424242424242424242424242424242
+                                     24      
+                                     24
+                               24242424242424
+                                   242424
+                                   242424
+                         2         242424         4
+                        24         242424         24
+       24242424242424E24242424242424242424242424242424242424242424242
     24242424242424242R24242424242424242424242424242424242424242424242424
       242424242424242E542424242424242424242424242424242424242424242424
-        2424242424242BM42424242424242424242LOMBARD2424242424242424
-          24242424242O242424242424242424242424242424242424242424
-              2424242RB4242424242424242424242424242424242424
-                                    242424                                    
-                                    242424
-                                    242424
-                                     2424
-                                     2424
-                                     2424
-                                      24
-                                      24
-                                    24BC24
-                                 242424242424
-                               2424242424242424
-                             24242424242424242424
-                                     2424
-                                      24
+        2424242424242BM42424242424242424242LOMBARD242424242424242424
+          24242424242O24242424242424242424242424242424242424242424
+              2424242RB424242424242424242424242424242424242424
+                                   242424                                    
+                                   242424
+                                   242424
+                                    2424
+                                    2424
+                                    2424
+                                     24
+                                     24
+                                   24BC24
+                                242424242424
+                              2424242424242424
+                            24242424242424242424
+                                    2424
+                                     24
         `;
 
         const asciiDiv = document.getElementById('ascii-art');
-        asciiDiv.innerHTML = asciiArt;
+        
+        // Replace specific characters with colored versions to create roundels
+        let asciiArtWithRoundel = asciiArt;
+        
+        // Upper wing roundels: characters around positions 15-20 and 45-50
+        const upperWing = '24242424242424242R24242424242424242424242424242424242424242424242424';
+        let modifiedUpperWing = upperWing;
+        
+        // Replace characters 15-20 and 45-50 with colored versions
+        const upperPositions = [12, 13, 14, 15, 52, 53, 54, 55];
+        upperPositions.reverse().forEach(pos => {
+          if (modifiedUpperWing[pos] === '2' || modifiedUpperWing[pos] === '4') {
+            modifiedUpperWing = modifiedUpperWing.substring(0, pos) + '<span style="color: #667;">' + modifiedUpperWing[pos] + '</span>' + modifiedUpperWing.substring(pos + 1);
+          }
+        });
+        
+        asciiArtWithRoundel = asciiArtWithRoundel.replace(upperWing, modifiedUpperWing);
+        
+        // Middle Upper wing roundels: characters around positions 15-20 and 45-50
+        const middleUpperWing = '242424242424242E542424242424242424242424242424242424242424242424';
+        let modifiedMiddleUpperWing = middleUpperWing;
+        
+        // Replace characters 15-20 and 45-50 with colored versions
+        const middleUpperPositions = [9, 14, 49, 54];
+        middleUpperPositions.reverse().forEach(pos => {
+          if (modifiedMiddleUpperWing[pos] === '2' || modifiedMiddleUpperWing[pos] === '4') {
+            modifiedMiddleUpperWing = modifiedMiddleUpperWing.substring(0, pos) + '<span style="color: #667;">' + modifiedMiddleUpperWing[pos] + '</span>' + modifiedMiddleUpperWing.substring(pos + 1);
+          }
+        });
+        
+        asciiArtWithRoundel = asciiArtWithRoundel.replace(middleUpperWing, modifiedMiddleUpperWing);
+        
+        // Middle Lower wing roundels: characters around positions 15-20 and 45-50
+        const middleLowerWing = '2424242424242BM42424242424242424242LOMBARD2424242424242424';
+        let modifiedMiddleLowerWing = middleLowerWing;
+        
+        // Replace characters 15-20 and 45-50 with colored versions
+        const middleLowerPositions = [7, 12, 47, 52];
+        middleLowerPositions.reverse().forEach(pos => {
+          if (modifiedMiddleLowerWing[pos] === '2' || modifiedMiddleLowerWing[pos] === '4') {
+            modifiedMiddleLowerWing = modifiedMiddleLowerWing.substring(0, pos) + '<span style="color: #667;">' + modifiedMiddleLowerWing[pos] + '</span>' + modifiedMiddleLowerWing.substring(pos + 1);
+          }
+        });
+        
+        asciiArtWithRoundel = asciiArtWithRoundel.replace(middleLowerWing, modifiedMiddleLowerWing);
+        
+        // Lower wing roundels: characters around positions 15-20 and 45-50
+        const lowerWing = '24242424242O242424242424242424242424242424242424242424';
+        let modifiedLowerWing = lowerWing;
+        
+        // Replace characters 15-20 and 45-50 with colored versions
+        const lowerPositions = [6, 7, 8, 9, 46, 47, 48, 49];
+        lowerPositions.reverse().forEach(pos => {
+          if (modifiedLowerWing[pos] === '2' || modifiedLowerWing[pos] === '4') {
+            modifiedLowerWing = modifiedLowerWing.substring(0, pos) + '<span style="color: #667;">' + modifiedLowerWing[pos] + '</span>' + modifiedLowerWing.substring(pos + 1);
+          }
+        });
+        
+        asciiArtWithRoundel = asciiArtWithRoundel.replace(lowerWing, modifiedLowerWing);
+
+        asciiDiv.innerHTML = asciiArtWithRoundel;
     </script>
 </body>
 </html> 
