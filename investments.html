@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hangar 24 - Investments</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: white;
+      font-family: 'Lato', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 0;
+      text-align: center;
+      height: calc(100vh - 6rem);
+    }
+    
+    .investment-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4rem;
+      width: 100%;
+      height: calc(100vh - 6rem);
+      opacity: 0;
+      animation: fadeIn 1s ease-out forwards;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .investment-card {
+      padding: 3rem 2rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .investment-card:hover {
+      opacity: 0.9;
+      transform: translateY(-3px);
+    }
+    
+    .investment-title {
+      font-size: 2.2rem;
+      font-weight: 300;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.05em;
+      position: relative;
+    }
+    
+    .investment-title::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+      transition: width 0.3s ease;
+    }
+    
+    .investment-card:hover .investment-title::after {
+      width: 60%;
+    }
+    
+    .investment-details {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      font-weight: 300;
+      line-height: 1.4;
+      letter-spacing: 0.02em;
+    }
+    
+    .announcing-soon {
+      font-size: 1rem;
+      opacity: 0.3;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      font-style: italic;
+    }
+    
+    .footer {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
+      margin-bottom: 2rem;
+      margin-top: 1.5rem;
+      flex-shrink: 0;
+    }
+    
+    @media (max-width: 768px) {
+      .investment-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+      
+      .investment-card {
+        padding: 1.5rem;
+      }
+      
+      .footer {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <div class="investment-grid">
+      <div class="investment-card">
+        <h3 class="investment-title">Erebor</h3>
+        <p class="investment-details">Seed • 2025</p>
+      </div>
+      
+      <div class="investment-card">
+        <h3 class="investment-title">Lombard</h3>
+        <p class="investment-details">Seed • 2025</p>
+      </div>
+      
+      <div class="investment-card">
+        <p class="announcing-soon">Announcing Soon</p>
+      </div>
+      
+      <div class="investment-card">
+        <p class="announcing-soon">Announcing Soon</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <a href="index.html" style="color: inherit; text-decoration: none; opacity: inherit;">Hangar 24</a>
+  </div>
+</body>
+</html> 

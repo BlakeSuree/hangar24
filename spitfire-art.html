@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hangar 24 - Spitfire Art (Saved)</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: white;
+      font-family: 'Lato', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .ascii-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin-top: 0.5rem; /* Move plane higher */
+    }
+    .ascii {
+      white-space: pre;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10px;
+      line-height: 10px;
+      letter-spacing: normal;
+      text-align: left;
+      margin: auto;
+      max-width: 100vw;
+      overflow-x: auto;
+      text-shadow: 2px 2px 4px #222, 1px 1px 2px #111;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      display: inline-block;
+    }
+    .cta-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 2rem;
+      padding: 0.7rem 2.2rem;
+      font-family: 'Lato', Arial, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.18s, border 0.18s, color 0.18s, box-shadow 0.18s;
+      outline: none;
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
+      text-shadow: none;
+      opacity: 0.92;
+    }
+    .cta-btn:hover, .cta-btn:focus {
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid #fff;
+      color: #fff;
+      box-shadow: 0 4px 24px 0 rgba(255,255,255,0.08);
+      opacity: 1;
+    }
+    .footer {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
+      margin-bottom: 2rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 600px) {
+      .ascii {
+        font-size: 7px;
+        line-height: 7px;
+      }
+      .cta-row {
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+      .footer {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+      }
+      .ascii-container {
+        margin-top: 0.2rem;
+      }
+    }
+    .ascii .glow {
+      text-shadow: 0 0 1px #fff, 0 0 2px #fff;
+      color: #fff;
+      z-index: 2;
+      position: relative;
+      display: inline-block;
+      transform-origin: center;
+      transform: scale(1.12);
+      transition: transform 0.08s linear, text-shadow 0.12s linear, color 0.12s linear;
+    }
+    .footer-links {
+      margin-top: 0.5rem;
+    }
+    .footer-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      opacity: 0.8;
+      margin: 0 0.18rem;
+      transition: opacity 0.15s, border-bottom 0.15s;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 1px;
+    }
+    .footer-link:hover, .footer-link:focus {
+      opacity: 1;
+      border-bottom: 1px solid #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="ascii-container">
+    <div class="ascii" id="ascii-art">
+      <!-- ASCII art will be rendered here by JS -->
+    </div>
+  </div>
+  <div class="footer">
+    Hangar 24
+    <div class="footer-links">
+      <a href="#" class="footer-link">Investments</a>
+      <a href="#" class="footer-link">Play</a>
+    </div>
+  </div>
+  <script>
+    // The ASCII art as a string
+    const asciiArt = `
+                                      24
+                                 242424242424
+                                    242424
+                                    242424
+                        2424        242424          2424
+                2424242424242424242424242424242424242424242424
+    2424242424242424242424242424242424242424242424242424242424242424242424
+        24242424242424242424242424242424242424242424242424242424242424
+            242424242424242424242424242424242424242424242424242424
+              24242424242424242424242424242424242424242424242424
+                  242424242424242424242424242424242424242424
+                                   242424                                    
+                                   242424
+                                   242424
+                                    2424
+                                    2424
+                                    2424
+                                     24
+                                     24
+                                  24242424
+                                242424242424
+                              2424242424242424
+                            24242424242424242424
+                                    2424
+                                     24
+    `;
+
+    const asciiDiv = document.getElementById('ascii-art');
+    const lines = asciiArt.split('\n');
+    // Store span references in a 2D array for easy neighbor lookup
+    const spanGrid = [];
+    asciiDiv.innerHTML = lines.map((line, rowIdx) => {
+      const row = [];
+      const html = line.split('').map((char, colIdx) => {
+        const span = document.createElement('span');
+        span.innerHTML = char === ' ' ? '&nbsp;' : char;
+        row.push(span);
+        return span.outerHTML;
+      }).join('');
+      spanGrid.push(row);
+      return html;
+    }).join('<br>');
+
+    // Custom grouping: 2 horizontal, 1 vertical, 1 diagonal
+    asciiDiv.addEventListener('mousemove', function(e) {
+      asciiDiv.querySelectorAll('.glow').forEach(el => el.classList.remove('glow'));
+      let closestSpan = null;
+      let minDist = Infinity;
+      let closestRow = 0, closestCol = 0;
+      spanGrid.forEach((row, rowIdx) => {
+        row.forEach((span, colIdx) => {
+          const rect = span.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+          if (dist < minDist) {
+            minDist = dist;
+            closestSpan = span;
+            closestRow = rowIdx;
+            closestCol = colIdx;
+          }
+        });
+      });
+      // Glow: 2 horizontal, 1 vertical, 1 diagonal
+      const offsets = [
+        [0, 0], // center
+        [0, -2], [0, -1], [0, 1], [0, 2], // horizontal
+        [-1, 0], [1, 0], // vertical
+        [-1, -1], [-1, 1], [1, -1], [1, 1] // diagonals
+      ];
+      offsets.forEach(([dr, dc]) => {
+        const r = closestRow + dr;
+        const c = closestCol + dc;
+        if (spanGrid[r] && spanGrid[r][c]) {
+          spanGrid[r][c].classList.add('glow');
+        }
+      });
+    });
+    asciiDiv.addEventListener('mouseleave', function() {
+      asciiDiv.querySelectorAll('.glow').forEach(el => el.classList.remove('glow'));
+    });
+    // Actually render the spans in the DOM
+    asciiDiv.innerHTML = '';
+    spanGrid.forEach((row, rowIdx) => {
+      row.forEach(span => asciiDiv.appendChild(span));
+      if (rowIdx < spanGrid.length - 1) asciiDiv.appendChild(document.createElement('br'));
+    });
+  </script>
+</body>
+</html> 

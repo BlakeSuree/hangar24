@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hangar 24 – Play</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      color: #fff;
+      font-family: 'Lato', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+    .header {
+      margin-top: 2rem;
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+    .game-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      margin-top: 2rem;
+      width: 100vw;
+      max-width: 1200px;
+    }
+    .game-area {
+      background: #181818;
+      border-radius: 1rem;
+      box-shadow: 0 2px 24px 0 rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    #gameCanvas {
+      background: #000;
+      border-radius: 0.5rem;
+      display: block;
+      margin: 0 auto;
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+    }
+    .score {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .leaderboard {
+      margin-left: 2.5rem;
+      background: #181818;
+      border-radius: 1rem;
+      box-shadow: 0 2px 24px 0 rgba(0,0,0,0.12);
+      padding: 1.5rem 2rem;
+      min-width: 220px;
+      max-width: 300px;
+      color: #fff;
+    }
+    .leaderboard h2 {
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .leaderboard-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .leaderboard-list li {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      text-align: left;
+    }
+    .footer {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
+      margin-bottom: 2rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 900px) {
+      .game-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .leaderboard {
+        margin-left: 0;
+        margin-top: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Hangar 24 – Play</div>
+  <div class="game-container">
+    <div class="game-area">
+      <canvas id="gameCanvas" width="600" height="400"></canvas>
+      <div class="score">Score: <span id="score">0</span></div>
+    </div>
+    <div class="leaderboard">
+      <h2>Leaderboard</h2>
+      <ol class="leaderboard-list" id="leaderboard">
+        <li>Player1 – 1200</li>
+        <li>Player2 – 900</li>
+        <li>Player3 – 700</li>
+      </ol>
+    </div>
+  </div>
+  <div class="footer">Hangar 24</div>
+  <script>
+    // --- Game Variables ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+
+    // --- Spitfire (stylized polygon) ---
+    const ship = {
+      x: canvas.width / 2,
+      y: canvas.height - 40,
+      angle: -Math.PI / 2, // facing up
+      radius: 18,
+      rotation: 0,
+      thrusting: false,
+      thrust: {x: 0, y: 0},
+      speed: 0.13,
+      friction: 0.99,
+      alive: true
+    };
+
+    // --- Asteroids ---
+    function randomAsteroidTop() {
+      const verts = Math.floor(Math.random() * 5) + 7;
+      const offs = [];
+      for (let i = 0; i < verts; i++) {
+        offs.push(Math.random() * 0.4 + 0.8);
+      }
+      return {
+        x: Math.random() * canvas.width,
+        y: -30,
+        r: Math.random() * 25 + 25,
+        a: Math.random() * Math.PI * 2,
+        verts: verts,
+        offs: offs,
+        xv: 0,
+        yv: Math.random() * 1.5 + 1.2 // always falling down
+      };
+    }
+    let asteroids = [];
+    function spawnAsteroid() {
+      asteroids.push(randomAsteroidTop());
+    }
+    // Start with a few asteroids
+    for (let i = 0; i < 3; i++) spawnAsteroid();
+    // Spawn new asteroids at intervals
+    setInterval(() => {
+      if (ship.alive) spawnAsteroid();
+    }, 1200);
+
+    // --- Bullets ---
+    let bullets = [];
+    const BULLET_SPEED = 5;
+    const BULLET_LIFE = 60;
+
+    // --- Score ---
+    let score = 0;
+    let keys = {};
+
+    // --- Controls ---
+    document.addEventListener('keydown', e => {
+      keys[e.code] = true;
+      if (e.code === 'Space' && ship.alive) shoot();
+    });
+    document.addEventListener('keyup', e => { keys[e.code] = false; });
+
+    function shoot() {
+      if (!ship.alive) return;
+      bullets.push({
+        x: ship.x + Math.cos(ship.angle) * ship.radius,
+        y: ship.y + Math.sin(ship.angle) * ship.radius,
+        xv: Math.cos(ship.angle) * BULLET_SPEED,
+        yv: Math.sin(ship.angle) * BULLET_SPEED,
+        life: BULLET_LIFE
+      });
+    }
+
+    // --- Game Loop ---
+    function update() {
+      if (!ship.alive) return;
+      // Rotation (left/right)
+      if (keys['ArrowLeft'] || keys['KeyA']) ship.x -= 4;
+      if (keys['ArrowRight'] || keys['KeyD']) ship.x += 4;
+      // Clamp ship to screen
+      ship.x = Math.max(ship.radius, Math.min(canvas.width - ship.radius, ship.x));
+      // No vertical movement for ship
+
+      // Bullets
+      bullets.forEach(b => {
+        b.x += b.xv;
+        b.y += b.yv;
+        b.life--;
+      });
+      bullets = bullets.filter(b => b.life > 0 && b.x >= 0 && b.x <= canvas.width && b.y >= 0 && b.y <= canvas.height);
+
+      // Asteroids
+      asteroids.forEach(a => {
+        a.y += a.yv;
+      });
+      // Remove asteroids that go off the bottom
+      asteroids = asteroids.filter(a => a.y - a.r < canvas.height);
+
+      // Bullet-Asteroid Collisions
+      bullets.forEach((b, bi) => {
+        asteroids.forEach((a, ai) => {
+          if (Math.hypot(b.x - a.x, b.y - a.y) < a.r) {
+            asteroids.splice(ai, 1);
+            bullets.splice(bi, 1);
+            score += 100;
+          }
+        });
+      });
+
+      // Ship-Asteroid Collisions
+      asteroids.forEach(a => {
+        if (Math.hypot(ship.x - a.x, ship.y - a.y) < a.r + ship.radius * 0.7) {
+          ship.alive = false;
+        }
+      });
+    }
+
+    function drawSpitfire() {
+      ctx.save();
+      ctx.translate(ship.x, ship.y);
+      ctx.rotate(ship.angle);
+      // Stylized Spitfire from SVG polyline (scaled and centered)
+      ctx.beginPath();
+      // SVG points (normalized and scaled for the game)
+      const points = [
+        [15, 40],[14, 40],[13, 40],[12, 40],[11, 40],[10, 40],[9, 40],[9, 39],[8, 39],[7, 39],[7, 38],[6, 38],[6, 37],[5, 37],[5, 36],[4, 36],[4, 35],[4, 34],[3, 34],[3, 33],[3, 32],[3, 31],[2, 31],[2, 30],[2, 29],[2, 28],[2, 27],[2, 26],[2, 25],[2, 24],[2, 23],[2, 22],[2, 21],[2, 20],[1, 20],[1, 19],[1, 18],[1, 17],[1, 16],[1, 15],[1, 14],[1, 13],[1, 12],[1, 11],[1, 10],[1, 9],[1, 8],[1, 7],[1, 6],[1, 5],[1, 4],[1, 3],[1, 2],[1, 1],[2, 0],[2, 0],[2,-1],[2,-2],[2,-3],[1,-3],[0,-2],[0,-1],[0,0],[0,0],[-1,1],[-1,1],[-2,2],[-2,3],[-2,3],[-3,4],[-3,5],[-3,5],[-4,6],[-4,7],[-4,7],[-5,8],[-5,9],[-5,9],[-6,10],[-6,11],[-6,11],[-7,12],[-7,13],[-7,13],[-8,14],[-8,15],[-8,15],[-9,16],[-9,17],[-9,17],[-10,18],[-10,19],[-10,19],[-11,20],[-11,21],[-11,21],[-12,22],[-12,23],[-12,23],[-13,24],[-13,25],[-13,25],[-14,26],[-14,27],[-14,27],[-15,28],[-15,29],[-15,29],[-16,30],[-16,31],[-16,31],[-17,32],[-17,33],[-17,33],[-18,34],[-18,35],[-18,35],[-19,36],[-19,37],[-19,37],[-20,38],[-20,39],[-20,39],[-21,40],[-21,41],[-21,41],[-22,42],[-22,43],[-22,43],[-23,44],[-23,45],[-23,45],[-24,46],[-24,47],[-24,47],[-25,48],[-25,49],[-25,49],[-26,50],[-26,51],[-26,51],[-27,52],[-27,53],[-27,53],[-28,54],[-28,55],[-28,55],[-29,56],[-29,57],[-29,57],[-30,58],[-30,59],[-30,59],[-31,60],[-31,61],[-31,61],[-32,62],[-32,63],[-32,63],[-33,64],[-33,65],[-33,65],[-34,66],[-34,67],[-34,67],[-35,68],[-35,69],[-35,69],[-36,70],[-36,71],[-36,71],[-37,72],[-37,73],[-37,73],[-38,74],[-38,75],[-38,75],[-39,76],[-39,77],[-39,77],[-40,78],[-40,79],[-40,79],[-41,80],[-41,81],[-41,81],[-42,82],[-42,83],[-42,83],[-43,84],[-43,85],[-43,85],[-44,86],[-44,87],[-44,87],[-45,88],[-45,89],[-45,89],[-46,90],[-46,91],[-46,91],[-47,92],[-47,93],[-47,93],[-48,94],[-48,95],[-48,95],[-49,96],[-49,97],[-49,97],[-50,98],[-50,99],[-50,99],[-51,100],[-51,101],[-51,101],[-52,102],[-52,103],[-52,103],[-53,104],[-53,105],[-53,105],[-54,106],[-54,107],[-54,107],[-55,108],[-55,109],[-55,109],[-56,110],[-56,111],[-56,111],[-57,112],[-57,113],[-57,113],[-58,114],[-58,115],[-58,115],[-59,116],[-59,117],[-59,117],[-60,118],[-60,119],[-60,119],[-61,120],[-61,121],[-61,121],[-62,122],[-62,123],[-62,123],[-63,124],[-63,125],[-63,125],[-64,126],[-64,127],[-64,127],[-65,128],[-65,129],[-65,129],[-66,130],[-66,131],[-66,131],[-67,132],[-67,133],[-67,133],[-68,134],[-68,135],[-68,135],[-69,136],[-69,137],[-69,137],[-70,138],[-70,139],[-70,139],[-71,140],[-71,141],[-71,141],[-72,142],[-72,143],[-72,143],[-73,144],[-73,145],[-73,145],[-74,146],[-74,147],[-74,147],[-75,148],[-75,149],[-75,149],[-76,150],[-76,151],[-76,151],[-77,152],[-77,153],[-77,153],[-78,154],[-78,155],[-78,155],[-79,156],[-79,157],[-79,157],[-80,158],[-80,159],[-80,159],[-81,160],[-81,161],[-81,161],[-82,162],[-82,163],[-82,163],[-83,164],[-83,165],[-83,165],[-84,166],[-84,167],[-84,167],[-85,168],[-85,169],[-85,169],[-86,170],[-86,171],[-86,171],[-87,172],[-87,173],[-87,173],[-88,174],[-88,175],[-88,175],[-89,176],[-89,177],[-89,177],[-90,178],[-90,179],[-90,179],[-91,180],[-91,181],[-91,181],[-92,182],[-92,183],[-92,183],[-93,184],[-93,185],[-93,185],[-94,186],[-94,187],[-94,187],[-95,188],[-95,189],[-95,189],[-96,190],[-96,191],[-96,191],[-97,192],[-97,193],[-97,193],[-98,194],[-98,195],[-98,195],[-99,196],[-99,197],[-99,197],[-100,198],[-100,199],[-100,199],[-101,200],[-101,201],[-101,201],[-102,202],[-102,203],[-102,203],[-103,204],[-103,205],[-103,205],[-104,206],[-104,207],[-104,207],[-105,208],[-105,209],[-105,209],[-106,210],[-106,211],[-106,211],[-107,212],[-107,213],[-107,213],[-108,214],[-108,215],[-108,215],[-109,216],[-109,217],[-109,217],[-110,218],[-110,219],[-110,219],[-111,220],[-111,221],[-111,221],[-112,222],[-112,223],[-112,223],[-113,224],[-113,225],[-113,225],[-114,226],[-114,227],[-114,227],[-115,228],[-115,229],[-115,229],[-116,230],[-116,231],[-116,231],[-117,232],[-117,233],[-117,233],[-118,234],[-118,235],[-118,235],[-119,236],[-119,237],[-119,237],[-120,238],[-120,239],[-120,239],[-121,240],[-121,241],[-121,241],[-122,242],[-122,243],[-122,243],[-123,244],[-123,245],[-123,245],[-124,246],[-124,247],[-124,247],[-125,248],[-125,249],[-125,249],[-126,250],[-126,251],[-126,251],[-127,252],[-127,253],[-127,253],[-128,254],[-128,255],[-128,255],[-129,256],[-129,257],[-129,257],[-130,258],[-130,259],[-130,259],[-131,260],[-131,261],[-131,261],[-132,262],[-132,263],[-132,263],[-133,264],[-133,265],[-133,265],[-134,266],[-134,267],[-134,267],[-135,268],[-135,269],[-135,269],[-136,270],[-136,271],[-136,271],[-137,272],[-137,273],[-137,273],[-138,274],[-138,275],[-138,275],[-139,276],[-139,277],[-139,277],[-140,278],[-140,279],[-140,279],[-141,280],[-141,281],[-141,281],[-142,282],[-142,283],[-142,283],[-143,284],[-143,285],[-143,285],[-144,286],[-144,287],[-144,287],[-145,288],[-145,289],[-145,289],[-146,290],[-146,291],[-146,291],[-147,292],[-147,293],[-147,293],[-148,294],[-148,295],[-148,295],[-149,296],[-149,297],[-149,297],[-150,298],[-150,299],[-150,299],[-151,300],[-151,301],[-151,301],[-152,302],[-152,303],[-152,303],[-153,304],[-153,305],[-153,305],[-154,306],[-154,307],[-154,307],[-155,308],[-155,309],[-155,309],[-156,310],[-156,311],[-156,311],[-157,312],[-157,313],[-157,313],[-158,314],[-158,315],[-158,315],[-159,316],[-159,317],[-159,317],[-160,318],[-160,319],[-160,319],[-161,320],[-161,321],[-161,321],[-162,322],[-162,323],[-162,323],[-163,324],[-163,325],[-163,325],[-164,326],[-164,327],[-164,327],[-165,328],[-165,329],[-165,329],[-166,330],[-166,331],[-166,331],[-167,332],[-167,333],[-167,333],[-168,334],[-168,335],[-168,335],[-169,336],[-169,337],[-169,337],[-170,338],[-170,339],[-170,339],[-171,340],[-171,341],[-171,341],[-172,342],[-172,343],[-172,343],[-173,344],[-173,345],[-173,345],[-174,346],[-174,347],[-174,347],[-175,348],[-175,349],[-175,349],[-176,350],[-176,351],[-176,351],[-177,352],[-177,353],[-177,353],[-178,354],[-178,355],[-178,355],[-179,356],[-179,357],[-179,357],[-180,358],[-180,359],[-180,359],[-181,360],[-181,361],[-181,361],[-182,362],[-182,363],[-182,363],[-183,364],[-183,365],[-183,365],[-184,366],[-184,367],[-184,367],[-185,368],[-185,369],[-185,369],[-186,370],[-186,371],[-186,371],[-187,372],[-187,373],[-187,373],[-188,374],[-188,375],[-188,375],[-189,376],[-189,377],[-189,377],[-190,378],[-190,379],[-190,379],[-191,380],[15,40]
+      ];
+      // Scale and center
+      const scale = 2.2;
+      ctx.moveTo(points[0][0] * scale, points[0][1] * scale);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i][0] * scale, points[i][1] * scale);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawAsteroid(a) {
+      ctx.save();
+      ctx.translate(a.x, a.y);
+      ctx.rotate(a.a);
+      ctx.beginPath();
+      for (let i = 0; i < a.verts; i++) {
+        const angle = ((Math.PI * 2) / a.verts) * i;
+        const r = a.r * a.offs[i];
+        ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = '#aaa';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBullet(b) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Asteroids
+      asteroids.forEach(drawAsteroid);
+      // Bullets
+      bullets.forEach(drawBullet);
+      // Ship
+      if (ship.alive) drawSpitfire();
+      // Score
+      scoreEl.textContent = score;
+      // Game Over
+      if (!ship.alive) {
+        ctx.save();
+        ctx.font = 'bold 2.2rem Lato, Arial, sans-serif';
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.globalAlpha = 0.85;
+        ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2);
+        ctx.font = '1.1rem Lato, Arial, sans-serif';
+        ctx.fillText('Press R to Restart', canvas.width / 2, canvas.height / 2 + 40);
+        ctx.globalAlpha = 1;
+        ctx.restore();
+      }
+    }
+
+    function gameLoop() {
+      update();
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (!ship.alive && e.code === 'KeyR') {
+        // Restart
+        ship.x = canvas.width / 2;
+        ship.y = canvas.height - 40;
+        ship.angle = -Math.PI / 2;
+        ship.thrust = {x: 0, y: 0};
+        ship.alive = true;
+        score = 0;
+        asteroids = [];
+        bullets = [];
+        for (let i = 0; i < 3; i++) spawnAsteroid();
+      }
+    });
+
+    gameLoop();
+  </script>
+</body>
+</html> 
