@@ -31,7 +31,7 @@
             text-align: left;
             margin: auto;
             max-width: 100vw;
-            overflow-x: auto;
+            overflow: hidden;
             text-shadow: 2px 2px 4px #222, 1px 1px 2px #111;
             cursor: default;
             user-select: none;
@@ -154,10 +154,7 @@
                                     2424
                                      24
                                      
-
-                                     
-                               Erebor
-                                 Erebor.com`;
+                               Erebor`;
 
         const asciiDiv = document.getElementById('ascii-art');
         
@@ -171,7 +168,7 @@
                 if (lines[i].includes('Erebor') && !lines[i].includes('Erebor.com')) {
                     const before = lines[i].substring(0, lines[i].indexOf('Erebor'));
                     const after = lines[i].substring(lines[i].indexOf('Erebor') + 'Erebor'.length);
-                    lines[i] = before + `<span style="font-size: 2.5em; color: white;">Erebor</span>` + after;
+                    lines[i] = before + `<span style="font-size: 1.8em; color: white;">Erebor</span>` + after;
                 }
             }
             
@@ -180,7 +177,7 @@
                 if (lines[i].includes('Erebor.com')) {
                     const before = lines[i].substring(0, lines[i].indexOf('Erebor.com'));
                     const after = lines[i].substring(lines[i].indexOf('Erebor.com') + 'Erebor.com'.length);
-                    lines[i] = before + `<a href="https://erebor.com" target="_blank" style="color: white; text-decoration: none; cursor: pointer; font-size: 1.5em;">Erebor.com</a>` + after;
+                    lines[i] = before + `<a href="https://erebor.com" target="_blank" style="color: white; text-decoration: none; cursor: pointer; font-size: 1.2em;">Erebor.com</a>` + after;
                 }
             }
             
