@@ -26,6 +26,15 @@
             position: relative;
             padding-top: 10vh;
         }
+        .content-plane-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            max-width: 90vw;
+            max-height: 80vh;
+        }
         .ascii {
             white-space: pre;
             font-family: 'Courier New', Courier, monospace;
@@ -45,10 +54,11 @@
         .content {
             text-align: center;
             position: absolute;
-            top: 33%;
+            top: 0;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
+            width: 100%;
         }
         .title {
             font-family: 'Space Grotesk', Arial, sans-serif;
@@ -111,6 +121,20 @@
                 font-size: 6px;
                 line-height: 6px;
             }
+            .content-plane-container {
+                max-width: 95vw;
+                max-height: 85vh;
+            }
+            .about {
+                max-width: 300px;
+                font-size: 0.9rem;
+            }
+            .title {
+                font-size: 1.5rem;
+            }
+            .founders {
+                font-size: 0.8rem;
+            }
             .cta-row {
                 flex-direction: column;
                 gap: 1rem;
@@ -136,13 +160,15 @@
 </head>
 <body>
     <div class="ascii-container">
-        <div class="ascii" id="ascii-art">
-            <!-- ASCII art will be rendered here by JS -->
-        </div>
-        <div class="content">
-            <h1 class="title"><a href="https://erebor.com" target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Erebor</a></h1>
-            <p class="about">A new kind of national bank, designed specifically to serve the next generation of high-growth companies.</p>
-            <p class="founders">Created By: Palmer Luckey, Trevor Capozza, Jacob Hirshman, Owen Rapaport, Aaron Pelz</p>
+        <div class="content-plane-container">
+            <div class="ascii" id="ascii-art">
+                <!-- ASCII art will be rendered here by JS -->
+            </div>
+            <div class="content">
+                <h1 class="title"><a href="https://erebor.com" target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Erebor</a></h1>
+                <p class="about">A new kind of national bank, designed specifically to serve the next generation of high-growth companies.</p>
+                <p class="founders">Created By: Palmer Luckey, Trevor Capozza, Jacob Hirshman, Owen Rapaport, Aaron Pelz</p>
+            </div>
         </div>
     </div>
     <script>
