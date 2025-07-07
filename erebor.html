@@ -159,17 +159,26 @@
 
         const asciiDiv = document.getElementById('ascii-art');
         
-        // Function to make erebor.com clickable
+        // Function to make erebor.com clickable and style text
         function makeEreborComClickable() {
             // Split the ASCII art into lines
             let lines = asciiArt.split('\n');
             
-            // Find the line with "Erebor.com" and make it clickable
+            // Find the line with "Erebor" and make it bigger (h3 size)
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].includes('Erebor') && !lines[i].includes('Erebor.com')) {
+                    const before = lines[i].substring(0, lines[i].indexOf('Erebor'));
+                    const after = lines[i].substring(lines[i].indexOf('Erebor') + 'Erebor'.length);
+                    lines[i] = before + `<span style="font-size: 1.5em; color: white;">Erebor</span>` + after;
+                }
+            }
+            
+            // Find the line with "Erebor.com" and make it clickable (h5 size)
             for (let i = 0; i < lines.length; i++) {
                 if (lines[i].includes('Erebor.com')) {
                     const before = lines[i].substring(0, lines[i].indexOf('Erebor.com'));
                     const after = lines[i].substring(lines[i].indexOf('Erebor.com') + 'Erebor.com'.length);
-                    lines[i] = before + `<a href="https://erebor.com" target="_blank" style="color: white; text-decoration: none; cursor: pointer;">Erebor.com</a>` + after;
+                    lines[i] = before + `<a href="https://erebor.com" target="_blank" style="color: white; text-decoration: none; cursor: pointer; font-size: 0.8em;">Erebor.com</a>` + after;
                 }
             }
             
