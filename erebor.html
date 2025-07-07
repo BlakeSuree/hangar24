@@ -40,20 +40,19 @@
         }
         .content {
             text-align: center;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
+            margin-top: 1rem;
         }
         .title {
             font-family: 'Lato', Arial, sans-serif;
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 300;
             color: white;
             margin: 0 0 0.5rem 0;
             letter-spacing: 0.05em;
         }
-        .website {
+        .founders {
             font-family: 'Lato', Arial, sans-serif;
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: rgba(255, 255, 255, 0.8);
             margin: 0;
             letter-spacing: 0.02em;
@@ -122,9 +121,13 @@
         <div class="ascii" id="ascii-art">
             <!-- ASCII art will be rendered here by JS -->
         </div>
+        <div class="content">
+            <h1 class="title">Erebor</h1>
+            <p class="founders">Founders: Palmer Luckey, Trevor Capozza</p>
+        </div>
     </div>
     <script>
-        // The ASCII art as a string
+                // The ASCII art as a string
         const asciiArt = `      
                                      24      
                                      24
@@ -152,31 +155,12 @@
                               2424242424242424
                             24242424242424242424
                                     2424
-                                     24
-                                     
-                                Erebor`;
+                                     24`;
 
         const asciiDiv = document.getElementById('ascii-art');
         
-        // Function to style Erebor text
-        function styleEreborText() {
-            // Split the ASCII art into lines
-            let lines = asciiArt.split('\n');
-            
-            // Find the line with "Erebor" and make it bigger
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].includes('Erebor')) {
-                    const before = lines[i].substring(0, lines[i].indexOf('Erebor'));
-                    const after = lines[i].substring(lines[i].indexOf('Erebor') + 'Erebor'.length);
-                    lines[i] = before + `<span style="font-size: 1.8em; color: white;">Erebor</span>` + after;
-                }
-            }
-            
-            return lines.join('\n');
-        }
-        
-        // Render the modified ASCII art
-        asciiDiv.innerHTML = styleEreborText();
+        // Render the ASCII art
+        asciiDiv.innerHTML = asciiArt;
     </script>
 </body>
 </html> 
