@@ -3,9 +3,7 @@
     { "source": "/home", "destination": "/HTML/home.html" },
     { "source": "/investments", "destination": "/HTML/investments.html" },
     { "source": "/coming-soon", "destination": "/HTML/coming-soon.html" },
-    { "source": "/erebor", "destination": "/HTML/erebor.html" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/HTML/404.html", "status": 404 }
+    { "source": "/erebor", "destination": "/HTML/erebor.html" },
+    { "source": "/(.*)", "destination": "/HTML/404.html" }
   ]
 } 
