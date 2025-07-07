@@ -910,3 +910,25 @@ Fixed the HTML rendering issue by removing `white-space: pre` from the CSS and a
 
 Additional Context:
 This was a follow-up to the LOMBARD positioning fix. The issue was that the CSS was preserving whitespace and treating HTML as literal text, which prevented the clickable links from rendering properly.
+
+## 2025-01-27 15:45 UTC – LOMBARD Click Fix
+
+Question Asked:
+The plane is still intact but lombard isn't letting me click it
+
+Response / Action Taken:
+Fixed the LOMBARD click detection by correcting the line number from 12 to 11. The ASCII art was being parsed with 0-indexed line numbers, so LOMBARD is actually on line 11, not line 12.
+
+Additional Context:
+The click event listener was checking for clicks on line 12, but LOMBARD appears on line 11 in the ASCII art. This caused the click detection to fail. Both EREBOR and LOMBARD should now be clickable and navigate to /coming-soon.
+
+## 2025-01-27 15:50 UTC – LOMBARD Character Position Adjustment
+
+Question Asked:
+ok perfect. just to let you know lombard is lines 43-49. i adjusted it
+
+Response / Action Taken:
+User manually adjusted the LOMBARD click detection area from characters 40-47 to 43-49 for more precise click targeting.
+
+Additional Context:
+The click detection coordinates were fine-tuned to match the exact position of "LOMBARD" text in the ASCII art. Both EREBOR and LOMBARD now show pointer cursor on hover and are fully clickable.

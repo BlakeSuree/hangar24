@@ -45,9 +45,6 @@
             position: relative;
             display: inline-block;
         }
-        .ascii a {
-            cursor: pointer;
-        }
         .cta-row {
             display: flex;
             justify-content: center;
@@ -147,7 +144,7 @@
 
         const asciiDiv = document.getElementById('ascii-art');
         
-        // Function to make EREBOR and LOMBARD clickable
+        // Function to make EREBOR clickable
         function makeClickable() {
             // Split the ASCII art into lines
             let lines = asciiArt.split('\n');
@@ -176,63 +173,12 @@
         
         // Function to handle EREBOR click
         function handleEreborClick() {
-            console.log('EREBOR clicked - navigating to /coming-soon - FINAL TEST');
-            window.location.href = '/coming-soon';
-        }
-        
-        // Function to handle LOMBARD click
-        function handleLombardClick() {
-            console.log('LOMBARD clicked - navigating to /coming-soon');
+            console.log('EREBOR clicked - navigating to /coming-soon - BUILD TEST');
             window.location.href = '/coming-soon';
         }
         
         // Render the modified ASCII art
         asciiDiv.innerHTML = makeClickable();
-        
-        // Add click event listener for LOMBARD
-        asciiDiv.addEventListener('click', function(e) {
-            const rect = asciiDiv.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // LOMBARD is on line 11, characters 43-49
-            // Approximate click area for LOMBARD
-            const lineHeight = 10; // font-size
-            const charWidth = 6; // approximate character width
-            const lombardLine = 11;
-            const lombardStart = 43;
-            const lombardEnd = 49;
-            
-            const clickLine = Math.floor(y / lineHeight);
-            const clickChar = Math.floor(x / charWidth);
-            
-            if (clickLine === lombardLine && clickChar >= lombardStart && clickChar < lombardEnd) {
-                handleLombardClick();
-            }
-        });
-        
-        // Add hover event listener for LOMBARD to show pointer cursor
-        asciiDiv.addEventListener('mousemove', function(e) {
-            const rect = asciiDiv.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // LOMBARD is on line 11, characters 43-49
-            const lineHeight = 10; // font-size
-            const charWidth = 6; // approximate character width
-            const lombardLine = 11;
-            const lombardStart = 43;
-            const lombardEnd = 49;
-            
-            const hoverLine = Math.floor(y / lineHeight);
-            const hoverChar = Math.floor(x / charWidth);
-            
-            if (hoverLine === lombardLine && hoverChar >= lombardStart && hoverChar < lombardEnd) {
-                asciiDiv.style.cursor = 'pointer';
-            } else {
-                asciiDiv.style.cursor = 'default';
-            }
-        });
     </script>
 </body>
 </html> 
