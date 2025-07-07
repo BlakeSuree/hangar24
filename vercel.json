@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/home", "destination": "/home.html" },
-    { "source": "/investments", "destination": "/investments.html" },
-    { "source": "/coming-soon", "destination": "/coming-soon.html" }
+    { "source": "/home", "destination": "/HTML/home.html" },
+    { "source": "/investments", "destination": "/HTML/investments.html" },
+    { "source": "/coming-soon", "destination": "/HTML/coming-soon.html" }
   ]
 } 
