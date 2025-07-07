@@ -144,8 +144,8 @@
 
         const asciiDiv = document.getElementById('ascii-art');
         
-        // Function to make EREBOR clickable
-        function makeEreborClickable() {
+        // Function to make EREBOR and LOMBARD clickable
+        function makeClickable() {
             // Split the ASCII art into lines
             let lines = asciiArt.split('\n');
             
@@ -168,6 +168,18 @@
                 }
             });
             
+            // Make LOMBARD clickable (line 12, starting at character 40)
+            const lombardLine = 12;
+            const lombardStart = 40;
+            const lombardEnd = 47; // LOMBARD is 7 characters long
+            
+            if (lines[lombardLine] && lines[lombardLine].length > lombardEnd) {
+                const before = lines[lombardLine].substring(0, lombardStart);
+                const lombard = lines[lombardLine].substring(lombardStart, lombardEnd);
+                const after = lines[lombardLine].substring(lombardEnd);
+                lines[lombardLine] = before + `<a href="#" style="color: #fff; text-decoration: none; cursor: pointer;" onclick="handleLombardClick()">${lombard}</a>` + after;
+            }
+            
             return lines.join('\n');
         }
         
@@ -176,8 +188,13 @@
             window.location.href = 'coming-soon';
         }
         
+        // Function to handle LOMBARD click
+        function handleLombardClick() {
+            window.location.href = 'coming-soon';
+        }
+        
         // Render the modified ASCII art
-        asciiDiv.innerHTML = makeEreborClickable();
+        asciiDiv.innerHTML = makeClickable();
     </script>
 </body>
 </html> 
