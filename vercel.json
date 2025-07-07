@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/home", "destination": "/HTML/home.html" },
     { "source": "/coming-soon", "destination": "/HTML/coming-soon.html" },
+    { "source": "/bc", "destination": "/HTML/bc.html" },
     { "source": "/", "destination": "/HTML/home.html" },
     { "source": "/(.*)", "destination": "/HTML/404.html" }
   ]
