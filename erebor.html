@@ -38,6 +38,26 @@
             position: relative;
             display: inline-block;
         }
+        .content {
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .title {
+            font-family: 'Lato', Arial, sans-serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: white;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: 0.05em;
+        }
+        .website {
+            font-family: 'Lato', Arial, sans-serif;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+            letter-spacing: 0.02em;
+        }
         .cta-row {
             display: flex;
             justify-content: center;
@@ -113,12 +133,12 @@
                                    242424
                          2         242424         4
                         24         242424         24
-       2424242424242424242424242424242424242424242424242424242424242
-    2424242424242424224242424242424242424242424242424242424242424242424
-      242424242424242242424242424242424242424242424242424242424242424
-        2424242424242242424242424242424242LOMBARD242424242424242424
-          2424242424224242424242424242424242424242424242424242424
-              24242422424242424242424242424242424242424242424
+       24242424242424242424242424242424242424242424242424242424242424
+    24242424242424242424242424242424242424242424242424242424242424242424
+      2424242424242424242424242424242424242424242424242424242424242424
+        242424242424242424242424242424242424242424242424242424242424
+          24242424242424242424242424242424242424242424242424242424
+              242424242424242424242424242424242424242424242424
                                    242424                                    
                                    242424
                                    242424
@@ -133,44 +153,12 @@
                             24242424242424242424
                                     2424
                                      24
-        `;
+                                     
+                                   Erebor
+                                 Erebor.com`;
 
         const asciiDiv = document.getElementById('ascii-art');
-        
-        // Function to make EREBOR clickable
-        function makeEreborClickable() {
-            // Split the ASCII art into lines
-            let lines = asciiArt.split('\n');
-            
-            // Define the positions where EREBOR letters appear (vertically) in the plane
-            const ereborPositions = [
-                { line: 8, char: 20, letter: 'E' },
-                { line: 9, char: 20, letter: 'R' },
-                { line: 10, char: 20, letter: 'E' },
-                { line: 11, char: 20, letter: 'B' },
-                { line: 12, char: 20, letter: 'O' },
-                { line: 13, char: 20, letter: 'R' }
-            ];
-            
-            // Replace each letter of EREBOR with a clickable link
-            ereborPositions.forEach(({ line, char, letter }) => {
-                if (lines[line] && lines[line].length > char) {
-                    const before = lines[line].substring(0, char);
-                    const after = lines[line].substring(char + 1);
-                    lines[line] = before + `<a href="#" style="color: #fff; text-decoration: none; cursor: pointer;" onclick="handleEreborClick()">${letter}</a>` + after;
-                }
-            });
-            
-            return lines.join('\n');
-        }
-        
-        // Function to handle EREBOR click
-        function handleEreborClick() {
-            window.location.href = '/erebor';
-        }
-        
-        // Render the modified ASCII art
-        asciiDiv.innerHTML = makeEreborClickable();
+        asciiDiv.innerHTML = asciiArt;
     </script>
 </body>
 </html> 
