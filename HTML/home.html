@@ -186,6 +186,12 @@
             window.location.href = '/coming-soon';
         }
         
+        // Function to handle BC click
+        function handleBcClick() {
+            console.log('BC clicked - navigating to /coming-soon');
+            window.location.href = '/coming-soon';
+        }
+        
         // Render the modified ASCII art
         asciiDiv.innerHTML = makeClickable();
         
@@ -196,7 +202,6 @@
             const y = e.clientY - rect.top;
             
             // LOMBARD is on line 11, characters 43-49
-            // Approximate click area for LOMBARD
             const lineHeight = 10; // font-size
             const charWidth = 6; // approximate character width
             const lombardLine = 11;
@@ -208,6 +213,27 @@
             
             if (clickLine === lombardLine && clickChar >= lombardStart && clickChar < lombardEnd) {
                 handleLombardClick();
+            }
+        });
+        
+        // Add click event listener for BC
+        asciiDiv.addEventListener('click', function(e) {
+            const rect = asciiDiv.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // BC is on line 20, characters 35-37
+            const lineHeight = 10; // font-size
+            const charWidth = 6; // approximate character width
+            const bcLine = 22;
+            const bcStart = 37;
+            const bcEnd = 39;
+            
+            const clickLine = Math.floor(y / lineHeight);
+            const clickChar = Math.floor(x / charWidth);
+            
+            if (clickLine === bcLine && clickChar >= bcStart && clickChar < bcEnd) {
+                handleBcClick();
             }
         });
         
@@ -229,9 +255,20 @@
             
             if (hoverLine === lombardLine && hoverChar >= lombardStart && hoverChar < lombardEnd) {
                 asciiDiv.style.cursor = 'pointer';
-            } else {
-                asciiDiv.style.cursor = 'default';
+                return;
             }
+            
+            // Check BC hover
+            const bcLine = 22;
+            const bcStart = 37;
+            const bcEnd = 39;
+            
+            if (hoverLine === bcLine && hoverChar >= bcStart && hoverChar < bcEnd) {
+                asciiDiv.style.cursor = 'pointer';
+                return;
+            }
+            
+            asciiDiv.style.cursor = 'default';
         });
     </script>
 </body>
