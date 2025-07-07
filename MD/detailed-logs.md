@@ -888,3 +888,25 @@ Removed background, border, and border-radius from .back-link. Updated styling t
 
 Additional Context:
 The back link now has clean, minimal styling that matches the about section's typography without any visual box or border elements.
+
+## 2025-01-27 15:45 UTC – Bug Fix
+
+Question Asked:
+User reported that the LOMBARD clickable positioning was messed up after previous changes.
+
+Response / Action Taken:
+Fixed the LOMBARD clickable positioning by correcting the character position calculation. Changed from position 42 to position 40 in the JavaScript code that makes LOMBARD clickable. The issue was that the character count was off by 2 positions, causing the clickable area to target the wrong part of the ASCII art.
+
+Additional Context:
+This was a follow-up to the previous session where we made LOMBARD clickable. The positioning calculation needed to be more precise to target the exact "LOMBARD" text in the ASCII art plane.
+
+## 2025-01-27 15:50 UTC – HTML Rendering Fix
+
+Question Asked:
+User reported that HTML code was being displayed as text in the ASCII art plane instead of being rendered as clickable links.
+
+Response / Action Taken:
+Fixed the HTML rendering issue by removing `white-space: pre` from the CSS and adding `.replace(/\n/g, '<br>')` to convert newlines to HTML line breaks. The `white-space: pre` was causing the HTML to be treated as literal text instead of being processed as HTML elements.
+
+Additional Context:
+This was a follow-up to the LOMBARD positioning fix. The issue was that the CSS was preserving whitespace and treating HTML as literal text, which prevented the clickable links from rendering properly.
