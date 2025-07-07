@@ -16,11 +16,11 @@
             min-height: 100vh;
         }
         .ascii-container {
-            flex: 1;
+            height: 80vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
         .ascii {
             white-space: pre;
@@ -40,7 +40,11 @@
         }
         .content {
             text-align: center;
-            margin-bottom: 0.5rem;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
         }
         .title {
             font-family: 'Lato', Arial, sans-serif;
@@ -118,12 +122,12 @@
 </head>
 <body>
     <div class="ascii-container">
+        <div class="ascii" id="ascii-art">
+            <!-- ASCII art will be rendered here by JS -->
+        </div>
         <div class="content">
             <h1 class="title">Erebor</h1>
             <p class="founders">Founders: Palmer Luckey, Trevor Capozza</p>
-        </div>
-        <div class="ascii" id="ascii-art">
-            <!-- ASCII art will be rendered here by JS -->
         </div>
     </div>
     <script>
