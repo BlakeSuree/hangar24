@@ -132,15 +132,20 @@
             left: 20px;
             font-family: 'Space Grotesk', Arial, sans-serif;
             font-size: 1rem;
-            color: rgba(255, 255, 255, 1);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             padding: 10px;
             z-index: 10000;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.02em;
         }
         .back-link:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+        .title a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+        .title a:hover {
             color: rgba(255, 255, 255, 1);
         }
 
@@ -215,7 +220,7 @@
                 <!-- ASCII art will be rendered here by JS -->
             </div>
             <div class="content">
-                <h1 class="title"><a href="https://erebor.com" target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Erebor</a></h1>
+                <h1 class="title"><a href="https://erebor.com" target="_blank">Erebor</a></h1>
                 <p class="about">A new kind of national bank, designed specifically to serve the next generation of high-growth companies.</p>
             </div>
             <div class="founders">From: Palmer Luckey, Trevor Capozza, Jacob Hirshman, Owen Rapaport, Aaron Pelz</div>
