@@ -202,8 +202,9 @@
             const y = e.clientY - rect.top;
             
             // LOMBARD is on line 11, characters 43-49
-            const lineHeight = 10; // font-size
-            const charWidth = 6; // approximate character width
+            const isMobile = window.innerWidth <= 600;
+            const lineHeight = isMobile ? 6 : 10; // font-size
+            const charWidth = isMobile ? 3.6 : 6; // approximate character width
             const lombardLine = 11;
             const lombardStart = 43;
             const lombardEnd = 49;
@@ -222,9 +223,10 @@
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // BC is on line 20, characters 35-37
-            const lineHeight = 10; // font-size
-            const charWidth = 6; // approximate character width
+            // BC is on line 22, characters 37-39
+            const isMobile = window.innerWidth <= 600;
+            const lineHeight = isMobile ? 6 : 10; // font-size
+            const charWidth = isMobile ? 3.6 : 6; // approximate character width
             const bcLine = 22;
             const bcStart = 37;
             const bcEnd = 39;
@@ -244,8 +246,9 @@
             const y = e.clientY - rect.top;
             
             // LOMBARD is on line 11, characters 43-49
-            const lineHeight = 10; // font-size
-            const charWidth = 6; // approximate character width
+            const isMobile = window.innerWidth <= 600;
+            const lineHeight = isMobile ? 6 : 10; // font-size
+            const charWidth = isMobile ? 3.6 : 6; // approximate character width
             const lombardLine = 11;
             const lombardStart = 43;
             const lombardEnd = 49;
